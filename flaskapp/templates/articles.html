@@ -1,0 +1,10 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+ <h1>ARTICLES</h1>
+ <ul class="list-group">
+     {% for x in data %}
+       <li class="list-group-item"><a href="article/{{x.id}}">{{x.title}}</a></li>
+     {% endfor %}
+  </ul>
+{% endblock %}
