@@ -4,13 +4,14 @@ from flask_mysqldb import MySQL
 from wtforms import Form, StringField,TextAreaField, PasswordField, validators
 from passlib.hash import sha256_crypt
 from functools import wraps
-
+import json
+import base64
 app = Flask(__name__)
 
 #Config flask_mysql
 app.config['MYSQL_HOST']='localhost'
-app.config['MYSQL_USER']='root'
-app.config['MYSQL_PASSWORD']='prajjwal'
+app.config['MYSQL_USER']='php'
+app.config['MYSQL_PASSWORD']='localhost'
 app.config['MYSQL_DB']='myflaskapp'
 app.config['MYSQL_CURSORCLASS']='DictCursor'
 #init MYSQL
@@ -123,10 +124,61 @@ def logout():
     flash("You are now logged out",'success')
     return redirect(url_for('login'))
 
+@app.route('/add_tag')
+def addTag():
+	valueT = request.args.get('valueT')
+	app.logger.info(valueT);
+	app.logger.info(len(valueT));
+	if len(valueT) :
+		username = session['username']
+		app.logger.info(username);
+		cur = mysql.connection.cursor();
+		result = cur.execute("select tagArray from users where username=%s",[username]);
+		app.logger.info(result);
+		app.logger.info("Step1");
+		TagList = cur.fetchone();
+		TagList = TagList["tagArray"];
+		app.logger.info(type(TagList))
+		app.logger.info(TagList);
+		app.logger.info("Step2");
+		if(TagList!=None):
+			#app.logger.info(base64.b64decode(TagList))
+			#TagList = json.loads(base64.b64decode(TagList))
+			app.logger.info("IN NOT NONE");
+			TagList = json.loads(TagList);
+			app.logger.info("step3");
+			TagList.append(valueT)
+			app.logger.info(TagList);
+			app.logger.info("YO");
+			TagList = json.dumps(TagList)
+			#TagList = base64.b64encode(TagList);
+			cur.execute("update users SET tagArray = %s where username=%s",(TagList,username));
+			mysql.connection.commit();
+		else:
+			TagList = []
+			TagList.append(valueT)
+			app.logger.info(TagList);
+			app.logger.info("YO");
+			TagList = json.dumps(TagList)
+			app.logger.info(TagList);
+			#TagList = base64.b64encode(TagList);
+			app.logger.info(TagList);
+			a = "update users SET tagArray = '"+TagList+"' where username = '"+username+"'";
+			app.logger.info(a);
+			#app.logger.info("update users SET tagArray = %s where username = %s",(TagList,username));
+			#res = cur.execute("update users SET tagArray = %s where username = %s",(TagList,username));
+			res = cur.execute(a);
+			mysql.connection.commit();
+			app.logger.info(res);
 @app.route('/dashboard')
 @is_logged_in
 def dashboard():
     return render_template('dashboard.html')
+
+@app.route('/input.html')
+@is_logged_in
+def input():
+	return render_template('input_data.html')
 
 if __name__=='__main__':
     app.secret_key='123456'

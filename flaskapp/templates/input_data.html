@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<!-- <script>window.jQuery || document.write('<script src="{{
+  url_for('static', filename='jquery.js') }}">\x3C/script>')</script> -->
+<script type="text/javascript">
+	// $SCRIPT_ROOT = {{request.script_root|tojson|safe}};
+	// $(function(){
+	// $('input#submitAdd').bind('click',function(){
+	// 	$.getJSON($SCRIPT_ROOT+'/add_tag',{
+	// 		valueT: $('input[id="tag"]').val()
+	// 	},function(data){
+	// 		$("input#tag").text('');
+	// 		$("res").style("display:block;");
+	// 		$("res").text("Successfull");
+	// 		});
+	// 	});
+	// });
+</script>
+<h1>
+	Input data
+</h1>
+<form name="add" id="add">
+	<label for="tag">Add tag: </label>
+	<input type="text" id="tag" name="tag" data-role="tagsinput" value="Amsterdam">
+	<input type="submit" id="submitAdd" name="submitAdd">
+</form>
+{% endblock %}
