@@ -179,10 +179,10 @@ def dashboard():
     return render_template('dashboard.html')
 
 
-class ProjectForm(Form):
-    title= StringField('Title',[validators.Length(min=1,max=100)])
-    description= TextAreaField('Description')
-    tagArray=
+# class ProjectForm(Form):
+#     title= StringField('Title',[validators.Length(min=1,max=100)])
+#     description= TextAreaField('Description')
+#     tagArray=
 
 
 @app.route('/input.html')
