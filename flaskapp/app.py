@@ -1,7 +1,7 @@
 from flask import Flask,render_template, flash, redirect, url_for, session, logging,request
 from data import Articles
 from flask_mysqldb import MySQL
-from wtforms import Form, StringField,TextAreaField, PasswordField, validators
+from wtforms import *
 from passlib.hash import sha256_crypt
 from functools import wraps
 
@@ -16,28 +16,29 @@ app.config['MYSQL_CURSORCLASS']='DictCursor'
 #init MYSQL
 mysql=MySQL(app)
 
-_articles=Articles();
+# _articles=Articles();
 
 @app.route('/')
 def index():
     return render_template('home.html')
 
-@app.route("/about")
-def about():
-    return render_template('about.html')
+# @app.route("/about")
+# def about():
+#     return render_template('about.html')
+#
+# @app.route("/articles")
+# def artic():
+#     return render_template('articles.html',data=_articles)
 
-@app.route("/articles")
-def artic():
-    return render_template('articles.html',data=_articles)
-
-@app.route("/article/<string:id>/")
-def art(id):
-    return render_template('article.html',id=id)
+# @app.route("/article/<string:id>/")
+# def art(id):
+#     return render_template('article.html',id=id)
 
 class RegisterForm(Form):
-    name= StringField('Name',[validators.Length(min=1,max=50)])
-    username=StringField('Username',[validators.Length(min=4,max=25)])
-    email=StringField('Email',[validators.Length(min=6,max=50)])
+    name= StringField('Name',[validators.Length(min=1,max=50),validators.DataRequired()])
+    roll= StringField('Roll-Number',[validators.Length(6)])
+    username=StringField('Username',[validators.Length(min=4,max=25),validators.DataRequired()])
+    email=StringField('Email',[validators.Length(min=6,max=50),validators.DataRequired()])
     password= PasswordField('Password',[
        validators.DataRequired(),
        validators.EqualTo('confirm',message="Passwords do not match")
@@ -49,6 +50,7 @@ def register():
     form = RegisterForm(request.form)
     if request.method=='POST' and form.validate():
         name=form.name.data
+        roll=form.roll.data
         email=form.email.data
         username=form.username.data
         password=sha256_crypt.encrypt(str(form.password.data))
@@ -87,6 +89,7 @@ def login():
                  app.logger.info('PASSWORD MATCHED')#prints in terminal
                  session['logged_in']=True
                  session['username']=username
+                 session['name']=data['name']
                  flash("You are now logged in",'success')
                  return redirect(url_for('dashboard'))
 
@@ -127,6 +130,12 @@ def logout():
 @is_logged_in
 def dashboard():
     return render_template('dashboard.html')
+
+class ProjectForm(Form):
+    title= StringField('Title',[validators.Length(min=1,max=100)])
+    description= TextAreaField('Description')
+    tagArray= 
+
 
 if __name__=='__main__':
     app.secret_key='123456'
