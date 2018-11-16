@@ -91,6 +91,7 @@ def login():
                  session['logged_in']=True
                  session['username']=username
                  session['name']=data['name']
+                 session['roll']=data['roll']
                  flash("You are now logged in",'success')
                  return redirect(url_for('dashboard'))
 
@@ -173,6 +174,7 @@ def addTag():
 			res = cur.execute(a);
 			mysql.connection.commit();
 			app.logger.info(res);
+
 @app.route('/dashboard')
 @is_logged_in
 def dashboard():
@@ -182,13 +184,28 @@ def dashboard():
 class ProjectForm(Form):
     title= StringField('Title',[validators.Length(min=1,max=100)])
     description= TextAreaField('Description')
-    tagArray=
 
 
-@app.route('/input.html')
+@app.route('/add_article',methods=['GET','POST'])
 @is_logged_in
-def input():
-	return render_template('input_data.html')
+def add_article():
+    form = RegisterForm(request.form)
+    if request.method=='POST' and form.validate():
+        title=form.title.data
+        description=form.description.data
+
+        cur=mysql.connection.cursor()
+        cur.execute("Insert into projects(name,project_title,roll_no,description) values(%s, %s, %s, %s)",(session[name],title,session[roll],description))
+        mysql.connection.commit()
+        
+
+
+
+
+# @app.route('/input.html')
+# @is_logged_in
+# def input():
+# 	return render_template('input_data.html')
 
 if __name__=='__main__':
     app.secret_key='123456'
