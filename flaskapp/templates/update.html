@@ -2,3 +2,55 @@
 
 {% block body %}
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<h1>Update Project</h1>
+ {% from "include/_formhelpers.html" import render_field %}
+ <form method="POST" action="" id="form1" name ="form1">
+   <div class="form-group">
+     <input type="text" id="title" name="title">
+   </div>
+   <div class="form-group">
+     <textarea type="textbox" id="desc" name="desc"></textarea>
+   </div>
+   <label for="tag">Add Tags: </label>
+ 	 <input type="text" id="tag" name="tag" data-role="tagsinput">
+ 	 <input type="hidden" id="idd" name="idd">
+ </form>
+ <p><input type="submit" class="btn btn-primary" value="submit" onclick="document.forms['form1'].submit()"></p>
+ <script type="text/javascript">
+ 	var $_GET = {};
+
+	document.location.search.replace(/\??(?:([^=]+)=([^&]*)&?)/g, function () {
+	    function decode(s) {
+	        return decodeURIComponent(s.split("+").join(" "));
+	    }
+
+	    $_GET[decode(arguments[1])] = decode(arguments[2]);
+	});
+ 	$SCRIPT_ROOT = {{request.script_root|tojson|safe}};
+	$(window).load(function(){
+		console.log("Hello");
+		console.log($_GET["id"]);
+		$('#idd').val($_GET["id"]);
+		$.getJSON($SCRIPT_ROOT+'/get_ini',{
+				id:$_GET["id"] 
+			},function(data){
+			console.log(data);
+			var array = data["tagArray"];
+			$('#desc').val(data["description"]);
+			$('input[id="title"]').val(data["project_title"]);
+			console.log(data["description"]);
+			if(array){
+			array = array.split(',');
+			array.forEach(function(data){
+				$('input[id="tag"]').tagsinput('add',data);
+			});
+			}
+			//console.log($('input[id="tag1"]').val());
+			// console.log(array.toString());
+			// $('input[id="tag1"]').val(array.toString());
+			// console.log($('input[id="tag1"]').val());
+			// $('input').tagsinput('refresh');
+		});
+	});
+ </script>
+ {% endblock %}

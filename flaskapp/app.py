@@ -190,16 +190,18 @@ def logout():
 # 		mysql.connection.commit();
 # 	return "Done";
 #
-# @app.route('/get_ini')
-# def getdata():
-# 	username = session['username']
-# 	app.logger.info(username);
-# 	cur = mysql.connection.cursor();
-# 	result = cur.execute("select tagArray from users where username=%s",[username]);
-# 	if(result):
-# 		TagList = cur.fetchone();
-# 		return TagList["tagArray"];
-# 	return "[]";
+@app.route('/get_ini')
+def getdata():
+	username = session['username']
+	idd = int(request.args.get('id'))
+	app.logger.info(idd);
+	cur = mysql.connection.cursor();
+	s = "select project_title,description,tagArray from projects where id="+str(idd)+" and username = ";
+	result = cur.execute((s+ "%s"),[username]);
+	if(result):
+		TagList = cur.fetchone();
+		return json.dumps(TagList);
+	return "[]";
 
 
 @app.route('/proj')
@@ -222,8 +224,25 @@ def Projects():
 def dashboard():
     return render_template('dashboard.html')
 
-
-
+@app.route('/update',methods=['GET','POST'])
+@is_logged_in
+def update():
+	if request.method=='POST':
+		title = request.form["title"];
+		description = request.form["desc"];
+		tagArray = request.form["tag"];
+		idd = request.form["idd"];
+		cur = mysql.connection.cursor()
+		s = "Update projects SET project_title=%s,description=%s,tagArray=%s where username=%s and id="+idd;
+		res = cur.execute(s,(title,description,tagArray,session['username']));
+		mysql.connection.commit()
+		cur.close()
+		if(res):
+			flash('Project Updated','success')
+		else:
+			flash('Failure','failure')
+		return redirect(url_for('Projects'))
+	return render_template('update.html',data=form)
 # class ProjectForm(Form):
 #     title= StringField('Title',[validators.Length(min=1,max=100)])
 #     description= TextAreaField('Description')
