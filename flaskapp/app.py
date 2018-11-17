@@ -127,52 +127,91 @@ def logout():
     flash("You are now logged out",'success')
     return redirect(url_for('login'))
 
+# @app.route('/add_tag')
+# def addTag():
+# 	valueT = request.args.get('valueT')
+# 	app.logger.info(valueT);
+# 	app.logger.info(len(valueT));
+# 	if len(valueT) :
+# 		username = session['username']
+# 		app.logger.info(username);
+# 		cur = mysql.connection.cursor();
+# 		result = cur.execute("select tagArray from users where username=%s",[username]);
+# 		app.logger.info(result);
+# 		app.logger.info("Step1");
+# 		TagList = cur.fetchone();
+# 		TagList = TagList["tagArray"];
+# 		app.logger.info(type(TagList))
+# 		app.logger.info(TagList);
+# 		app.logger.info("Step2");
+# 		if(TagList!=None):
+# 			#app.logger.info(base64.b64decode(TagList))
+# 			#TagList = json.loads(base64.b64decode(TagList))
+# 			app.logger.info("IN NOT NONE");
+# 			TagList = json.loads(TagList);
+# 			app.logger.info("step3");
+# 			TagList.append(valueT)
+# 			app.logger.info(TagList);
+# 			app.logger.info("YO");
+# 			TagList = json.dumps(TagList)
+# 			#TagList = base64.b64encode(TagList);
+# 			cur.execute("update users SET tagArray = %s where username=%s",(TagList,username));
+# 			mysql.connection.commit();
+# 		else:
+# 			TagList = []
+# 			TagList.append(valueT)
+# 			app.logger.info(TagList);
+# 			app.logger.info("YO");
+# 			TagList = json.dumps(TagList)
+# 			app.logger.info(TagList);
+# 			#TagList = base64.b64encode(TagList);
+# 			app.logger.info(TagList);
+# 			a = "update users SET tagArray = '"+TagList+"' where username = '"+username+"'";
+# 			app.logger.info(a);
+# 			#app.logger.info("update users SET tagArray = %s where username = %s",(TagList,username));
+# 			#res = cur.execute("update users SET tagArray = %s where username = %s",(TagList,username));
+# 			res = cur.execute(a);
+# 			mysql.connection.commit();
+# 			app.logger.info(res);
 @app.route('/add_tag')
 def addTag():
 	valueT = request.args.get('valueT')
 	app.logger.info(valueT);
-	app.logger.info(len(valueT));
 	if len(valueT) :
 		username = session['username']
 		app.logger.info(username);
 		cur = mysql.connection.cursor();
-		result = cur.execute("select tagArray from users where username=%s",[username]);
-		app.logger.info(result);
-		app.logger.info("Step1");
+		# # result = cur.execute("select tagArray from users where username=%s",[username]);
+		# # app.logger.info(result);
+		# # app.logger.info("Step1");
+		# # TagList = cur.fetchone();
+		# # TagList = TagList["tagArray"];
+		# # app.logger.info(type(TagList))
+		# # app.logger.info(TagList);
+		# # app.logger.info("Step2");
+		# # app.logger.info("IN NOT NONE");
+		# TagList = json.loads(valueT);
+		# app.logger.info("step3");
+		# # TagList.append(valueT)
+		# app.logger.info(TagList);
+		# app.logger.info("YO");
+		# TagList = json.dumps(TagList)
+		# #TagList = base64.b64encode(TagList);
+		cur.execute("update users SET tagArray = %s where username=%s",(valueT,username));
+		mysql.connection.commit();
+	return "Done";
+
+@app.route('/get_ini')
+def getdata():
+	username = session['username']
+	app.logger.info(username);
+	cur = mysql.connection.cursor();
+	result = cur.execute("select tagArray from users where username=%s",[username]);
+	if(result):
 		TagList = cur.fetchone();
-		TagList = TagList["tagArray"];
-		app.logger.info(type(TagList))
-		app.logger.info(TagList);
-		app.logger.info("Step2");
-		if(TagList!=None):
-			#app.logger.info(base64.b64decode(TagList))
-			#TagList = json.loads(base64.b64decode(TagList))
-			app.logger.info("IN NOT NONE");
-			TagList = json.loads(TagList);
-			app.logger.info("step3");
-			TagList.append(valueT)
-			app.logger.info(TagList);
-			app.logger.info("YO");
-			TagList = json.dumps(TagList)
-			#TagList = base64.b64encode(TagList);
-			cur.execute("update users SET tagArray = %s where username=%s",(TagList,username));
-			mysql.connection.commit();
-		else:
-			TagList = []
-			TagList.append(valueT)
-			app.logger.info(TagList);
-			app.logger.info("YO");
-			TagList = json.dumps(TagList)
-			app.logger.info(TagList);
-			#TagList = base64.b64encode(TagList);
-			app.logger.info(TagList);
-			a = "update users SET tagArray = '"+TagList+"' where username = '"+username+"'";
-			app.logger.info(a);
-			#app.logger.info("update users SET tagArray = %s where username = %s",(TagList,username));
-			#res = cur.execute("update users SET tagArray = %s where username = %s",(TagList,username));
-			res = cur.execute(a);
-			mysql.connection.commit();
-			app.logger.info(res);
+		return TagList["tagArray"];
+	return "[]";
+
 @app.route('/dashboard')
 @is_logged_in
 def dashboard():

@@ -1,29 +1,53 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<!-- <script>window.jQuery || document.write('<script src="{{
-  url_for('static', filename='jquery.js') }}">\x3C/script>')</script> -->
-<script type="text/javascript">
-	// $SCRIPT_ROOT = {{request.script_root|tojson|safe}};
-	// $(function(){
-	// $('input#submitAdd').bind('click',function(){
-	// 	$.getJSON($SCRIPT_ROOT+'/add_tag',{
-	// 		valueT: $('input[id="tag"]').val()
-	// 	},function(data){
-	// 		$("input#tag").text('');
-	// 		$("res").style("display:block;");
-	// 		$("res").text("Successfull");
-	// 		});
-	// 	});
-	// });
-</script>
+
 <h1>
 	Input data
 </h1>
 <form name="add" id="add">
 	<label for="tag">Add tag: </label>
-	<input type="text" id="tag" name="tag" data-role="tagsinput" >
+	<input type="text" id="tag1" name="tag" data-role="tagsinput" >
 	<!-- <input type="submit" id="submitAdd" name="submitAdd">
  --></form>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<!-- <script>window.jQuery || document.write('<script src="{{
+  url_for('static', filename='jquery.js') }}">\x3C/script>')</script> -->
+<script type="text/javascript">
+	$SCRIPT_ROOT = {{request.script_root|tojson|safe}};
+	// var inp = document.querySelector('#tag');
+	// inp.addEventListener('input', function() {
+	// 	console.log('asdasd');
+	// });
+
+	// $('#tag1').on('change', function() {
+	// 	console.log('asdasdas');
+	// });
+	$(window).load(function(){
+		console.log("Hello");
+		$.getJSON($SCRIPT_ROOT+'/get_ini',{},function(data){
+			var array = data;
+			array.forEach(function(data){
+				$('input[id="tag1"]').tagsinput('add',data);
+			});
+			// console.log(array.toString());
+			// $('input[id="tag1"]').val(array.toString());
+			// console.log($('input[id="tag1"]').val());
+			// $('input').tagsinput('refresh');
+		});
+	});
+	$('#tag1').on('change',function(){
+		var array = ($('input[id="tag1"]').val()).split(',');
+		console.log(array);
+		//console.log($('input[id="tag1"]').val());
+		$.getJSON($SCRIPT_ROOT+'/add_tag',{
+			valueT: JSON.stringify(array)
+		},function(data){
+			//console.log(valueT);
+			$("res").style("display:block;");
+			$("res").text("Successfull");
+			});
+		});
+</script>
+
 {% endblock %}
