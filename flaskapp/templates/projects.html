@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<div id="projectList">
+</div>
+<script type="text/javascript">
+	$SCRIPT_ROOT = {{request.script_root|tojson|safe}};
+	var string1 = "<table class='table table-hover'><tr><th>Project Title</th><th>Description</th><th>Tags</th><th>Edit</th></tr>";
+	$(window).load(function(){
+		$.getJSON($SCRIPT_ROOT+'/proj',{},function(data){
+			var array = data;
+			console.log(array);
+			array.forEach(function(data){
+				var s = "<tr><td>"+data["project_title"]+"</td><td>"+data["description"]+"</td><td>";
+				if(data["tagArray"]){
+				var arr = data["tagArray"].split(',');
+				arr.forEach(function(d){
+					s+='<span class = "badge badge-default">'+d+"</span>";
+				});
+				}
+				string1+=s+"</td><td>"+'<a href="/update?id='+data["id"]+'">Edit</a>'+"</td></tr>";
+			});
+			string1+="</table>"
+			console.log(string1);
+			$("#projectList").append(string1);
+		});
+	});
+	
+</script>
+{% endblock %}

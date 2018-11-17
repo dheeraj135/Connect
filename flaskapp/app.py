@@ -10,8 +10,8 @@ app = Flask(__name__)
 
 #Config flask_mysql
 app.config['MYSQL_HOST']='localhost'
-app.config['MYSQL_USER']='root'
-app.config['MYSQL_PASSWORD']='prajjwal'
+app.config['MYSQL_USER']='php'
+app.config['MYSQL_PASSWORD']='localhost'
 app.config['MYSQL_DB']='myflaskapp'
 app.config['MYSQL_CURSORCLASS']='DictCursor'
 #init MYSQL
