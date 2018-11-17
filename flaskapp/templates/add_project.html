@@ -7,13 +7,16 @@
  {% from "include/_formhelpers.html" import render_field %}
  <form method="POST" action="" id="form1" name ="form1">
    <div class="form-group">
-     <input type="text" id="title" name="title">
+     <label for="title" >Title: </label>
+     <input type="text" id="title" name="title" class="form-control">
    </div>
    <div class="form-group">
-     <textarea type="textbox" id="desc" name="desc"></textarea>
+     <label for="desc">Description: </label>
+     <textbox id="desc" name="desc" class="form-control"></textbox>
    </div>
    <label for="tag">Add Tags: </label>
- 	 <input type="text" id="tag" name="tag" data-role="tagsinput">
+   <br>
+ 	 <input type="text" id="tag" name="tag" data-role="tagsinput" class="form-control">
  </form>
- <p><input type="submit" class="btn btn-primary" value="submit" onclick="document.forms['form1'].submit()"></p>
+ <p><input type="submit" class="btn btn-primary" style="margin-top: 20px;" value="submit" onclick="document.forms['form1'].submit()"></p>
 {% endblock %}
