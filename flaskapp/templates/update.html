@@ -52,5 +52,8 @@
 			// $('input').tagsinput('refresh');
 		});
 	});
+	$('#tag').on('beforeItemRemove',function(event){
+		event.cancel = !(confirm("Delete "+event.item+" ?"));
+	});
  </script>
  {% endblock %}

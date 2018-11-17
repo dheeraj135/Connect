@@ -19,4 +19,9 @@
  	 <input type="text" id="tag" name="tag" data-role="tagsinput" class="form-control">
  </form>
  <p><input type="submit" class="btn btn-primary" style="margin-top: 20px;" value="submit" onclick="document.forms['form1'].submit()"></p>
+ <script type="text/javascript">
+ 	$('#tag').on('beforeItemRemove',function(event){
+		event.cancel = !(confirm("Delete "+event.item+" ?"));
+	});
+ </script>
 {% endblock %}
