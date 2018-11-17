@@ -6,7 +6,7 @@
 </div>
 <script type="text/javascript">
 	$SCRIPT_ROOT = {{request.script_root|tojson|safe}};
-	var string1 = "<table class='table table-hover'><tr><th>Project Title</th><th>Description</th><th>Tags</th><th>Edit</th></tr>";
+	var string1 = "<table class='table table-hover'><tr><th>Project Title</th><th>Description</th><th>Tags</th><th>Edit</th><th>Delete</th></tr>";
 	$(window).load(function(){
 		$.getJSON($SCRIPT_ROOT+'/proj',{},function(data){
 			var array = data;
@@ -19,7 +19,10 @@
 					s+='<span class = "badge badge-default">'+d+"</span>";
 				});
 				}
-				string1+=s+"</td><td>"+'<a href="/update?id='+data["id"]+'">Edit</a>'+"</td></tr>";
+				msg="Are you sure?";
+				p='<input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm(msg)">';
+				string1+=s+"</td><td>"+'<a href="/update?id='+data["id"]+'">Edit</a>'+'<td>'+p+'</td>';
+
 			});
 			string1+="</table>"
 			console.log(string1);

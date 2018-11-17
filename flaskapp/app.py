@@ -4,9 +4,19 @@ from flask_mysqldb import MySQL
 from wtforms import *
 from passlib.hash import sha256_crypt
 from functools import wraps
+from flask_ckeditor import CKEditor
 import json
 import base64
+
 app = Flask(__name__)
+app.config['CKEDITOR_PKG_TYPE'] = 'basic'
+CKEDITOR_SERVE_LOCAL=True
+ckeditor = CKEditor(app)
+def create_app():
+    app = Flask(__name__)
+    ckeditor.init_app(app)
+    return app
+
 
 #Config flask_mysql
 app.config['MYSQL_HOST']='localhost'
@@ -214,6 +224,7 @@ def getProj():
 	if(result):
 		return json.dumps(cur.fetchall());
 	return "[]";
+
 @app.route('/projects')
 @is_logged_in
 def Projects():
@@ -243,17 +254,14 @@ def update():
 			flash('Failure','failure')
 		return redirect(url_for('Projects'))
 	return render_template('update.html',data=form)
-# class ProjectForm(Form):
-#     title= StringField('Title',[validators.Length(min=1,max=100)])
-#     description= TextAreaField('Description')
-#     tagArray= StringField('Tags')
 
 
+# class ckeditorForm(Form):
+#     description= CKEditorField('Description')
 
 @app.route('/add_project',methods=['GET','POST'])
 @is_logged_in
 def add_project():
-    # form = ProjectForm(request.form)
     if request.method=='POST' :
         #title=form.title.data
         #description=form.description.data
@@ -269,6 +277,27 @@ def add_project():
         return redirect(url_for('dashboard'))
     return render_template('add_project.html',data=form)
 
+@app.route('/search',methods=['GET','POST'])
+@is_logged_in
+def search():
+    if request.method=='POST':
+        tag = request.form["tag"];
+        tag=str(tag)
+        tagArray=tag.split(',')
+        app.logger.info(tagArray)
+        cur=mysql.connection.cursor()
+        cur.execute("select * from projects")
+        data = cur.fetchall()
+        # print(data)
+        mysql.connection.commit()
+        cur.close()
+
+        for pro in data:
+            for i in tagArray:
+                if i in str(pro['tagArray']):
+                    print(pro)
+                    break
+    return render_template('search.html',data=form)
 
 
 @app.route('/input.html')

@@ -1,0 +1,13 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+ <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+ <h1> Search Here: </h1>
+ 
+ <form method="POST" action="" id="form1" name ="form1">
+   <label for="tag">Enter Tags: </label>
+   <br>
+ 	 <input type="text" id="tag" name="tag" data-role="tagsinput" class="form-control">
+ </form>
+ <p><input type="submit" class="btn btn-primary" style="margin-top: 20px;" value="submit" onclick="document.forms['form1'].submit()"></p>
+{% endblock %}

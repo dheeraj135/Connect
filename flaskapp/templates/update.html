@@ -6,13 +6,13 @@
  {% from "include/_formhelpers.html" import render_field %}
  <form method="POST" action="" id="form1" name ="form1">
    <div class="form-group">
-     <input type="text" id="title" name="title">
+     <input type="text" id="title" name="title" class="form-control">
    </div>
    <div class="form-group">
-     <textarea type="textbox" id="desc" name="desc"></textarea>
+     <textarea type="textbox" id="desc" name="desc" class="form-control"></textarea>
    </div>
    <label for="tag">Add Tags: </label>
- 	 <input type="text" id="tag" name="tag" data-role="tagsinput">
+ 	 <input type="text" id="tag" name="tag" data-role="tagsinput" class="form-control">
  	 <input type="hidden" id="idd" name="idd">
  </form>
  <p><input type="submit" class="btn btn-primary" value="submit" onclick="document.forms['form1'].submit()"></p>
@@ -32,7 +32,7 @@
 		console.log($_GET["id"]);
 		$('#idd').val($_GET["id"]);
 		$.getJSON($SCRIPT_ROOT+'/get_ini',{
-				id:$_GET["id"] 
+				id:$_GET["id"]
 			},function(data){
 			console.log(data);
 			var array = data["tagArray"];
