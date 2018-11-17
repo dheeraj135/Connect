@@ -3,11 +3,46 @@
 {% block body %}
  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
  <h1> Search Here: </h1>
- 
+
  <form method="POST" action="" id="form1" name ="form1">
    <label for="tag">Enter Tags: </label>
    <br>
  	 <input type="text" id="tag" name="tag" data-role="tagsinput" class="form-control">
  </form>
- <p><input type="submit" class="btn btn-primary" style="margin-top: 20px;" value="submit" onclick="document.forms['form1'].submit()"></p>
+ <p><input type="submit" class="btn btn-primary" style="margin-top: 20px;" value="submit" onclick="called()"></p>
+
+ <div id="result">
+ </div>
+
+   <script type="text/javascript">
+   	$SCRIPT_ROOT = {{request.script_root|tojson|safe}};
+   	var string1 = ""
+    string1="<table class='table table-hover'><tr><th>Project Title</th><th>Description</th><th>Tags</th><th>Done By</th><th>Email</th></tr>";
+   	function called(){
+   		$.getJSON($SCRIPT_ROOT+'/searchData',{
+        tag: $('#tag').val()
+      },function(data){
+        string1="<table class='table table-hover'><tr><th>Project Title</th><th>Description</th><th>Tags</th><th>Done By</th><th>Email</th></tr>";
+   			var array = data;
+   			console.log(array);
+   			array.forEach(function(data){
+   				var s = "<tr><td>"+data["project_title"]+"</td><td>"+data["description"]+"</td><td>";
+   				if(data["tagArray"]){
+   				var arr = data["tagArray"].split(',');
+   				arr.forEach(function(d){
+   					s+='<span class = "badge badge-default">'+d+"</span>";
+   				});
+   				}
+   		    var p="</td><td>"+data["name"]+"</td><td>"+data["email"]+"</td><td></tr>";
+   				string1+=s+p;
+
+   			});
+   			string1+="</table>"
+   			console.log(string1);
+   			document.getElementById("result").innerHTML = string1;
+   		});
+      return false;
+    }
+
+   </script>
 {% endblock %}

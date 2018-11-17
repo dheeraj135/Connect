@@ -20,8 +20,8 @@
 				});
 				}
 				msg="Are you sure?";
-				p='<input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm(msg)">';
-				string1+=s+"</td><td>"+'<a href="/update?id='+data["id"]+'">Edit</a>'+'<td>'+p+'</td>';
+				p='<input type="submit" value="Delete" class="btn btn-danger" onclick="return deleteD('+data["id"]+')">';
+				string1+=s+"</td><td>"+'<a href="/update?id='+data["id"]+'">Edit</a>'+'<td>'+p+'</td></tr>';
 
 			});
 			string1+="</table>"
@@ -29,6 +29,16 @@
 			$("#projectList").append(string1);
 		});
 	});
-
+function deleteD(t)
+{
+	var res = confirm("Are you sure?");
+	if(!res)
+		return false;
+	$.getJSON($SCRIPT_ROOT+"/del",{
+		idd : t
+	},function(data){
+		return true;
+	});
+}
 </script>
 {% endblock %}

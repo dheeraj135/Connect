@@ -218,7 +218,6 @@ def getdata():
 @is_logged_in
 def getProj():
 	username = session['username']
-	app.logger.info
 	cur = mysql.connection.cursor();
 	result = cur.execute("select id,project_title,description,tagArray from projects where username=%s",[username]);
 	if(result):
@@ -277,28 +276,59 @@ def add_project():
         return redirect(url_for('dashboard'))
     return render_template('add_project.html',data=form)
 
-@app.route('/search',methods=['GET','POST'])
+@app.route('/search')
 @is_logged_in
 def search():
-    if request.method=='POST':
-        tag = request.form["tag"];
+    return render_template('search.html')
+
+@app.route('/searchData')
+@is_logged_in
+def searchD():
+        tag = request.args.get("tag");
         tag=str(tag)
         tagArray=tag.split(',')
         app.logger.info(tagArray)
         cur=mysql.connection.cursor()
-        cur.execute("select * from projects")
+        cur.execute("select id,username,project_title,description,tagArray from projects")
         data = cur.fetchall()
-        # print(data)
         mysql.connection.commit()
-        cur.close()
+        #cur.close()
 
+        list=[]
         for pro in data:
+            user = pro["username"]
+            cur.execute("select name,email from users where username=%s",[user])
+            d = cur.fetchone()
+            name = d['name']
+            email = d['email']
+            app.logger.info(user)
             for i in tagArray:
                 if i in str(pro['tagArray']):
-                    print(pro)
+                    pro['name'] = name
+                    pro['email'] = email
+                    list.append(pro)
                     break
-    return render_template('search.html',data=form)
 
+        # print(list)
+        app.logger.info(list)
+        if(list):
+    		return json.dumps(list);
+    	return "[]";
+
+@app.route('/del')
+@is_logged_in
+def dell():
+    cur=mysql.connection.cursor()
+    s = request.args.get("idd");
+    app.logger.info(session['username'])
+    s = "delete from projects where username=\""+session['username']+"\" and id ="+s;
+    res = cur.execute(s)
+    mysql.connection.commit()
+    if res:
+        flash("Deleted Successfully",'success')
+    else:
+        flash("Denied",'failure')
+    return "[]"
 
 @app.route('/input.html')
 @is_logged_in
