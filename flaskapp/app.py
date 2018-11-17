@@ -4,18 +4,18 @@ from flask_mysqldb import MySQL
 from wtforms import *
 from passlib.hash import sha256_crypt
 from functools import wraps
-from flask_ckeditor import CKEditor
+#from flask_ckeditor import CKEditor
 import json
 import base64
 
 app = Flask(__name__)
-app.config['CKEDITOR_PKG_TYPE'] = 'basic'
-CKEDITOR_SERVE_LOCAL=True
-ckeditor = CKEditor(app)
-def create_app():
-    app = Flask(__name__)
-    ckeditor.init_app(app)
-    return app
+# app.config['CKEDITOR_PKG_TYPE'] = 'basic'
+# CKEDITOR_SERVE_LOCAL=True
+# ckeditor = CKEditor(app)
+# def create_app():
+#     app = Flask(__name__)
+#     ckeditor.init_app(app)
+#     return app
 
 
 #Config flask_mysql
@@ -312,8 +312,8 @@ def searchD():
         # print(list)
         app.logger.info(list)
         if(list):
-    		return json.dumps(list);
-    	return "[]";
+            return json.dumps(list);
+        return "[]";
 
 @app.route('/del')
 @is_logged_in

@@ -6,8 +6,9 @@
 </div>
 <script type="text/javascript">
 	$SCRIPT_ROOT = {{request.script_root|tojson|safe}};
-	var string1 = "<table class='table table-hover'><tr><th>Project Title</th><th>Description</th><th>Tags</th><th>Edit</th><th>Delete</th></tr>";
-	$(window).load(function(){
+	var string1 = "";
+	function buildtable(){
+		string1= "<table class='table table-hover'><tr><th>Project Title</th><th>Description</th><th>Tags</th><th>Edit</th><th>Delete</th></tr>";
 		$.getJSON($SCRIPT_ROOT+'/proj',{},function(data){
 			var array = data;
 			console.log(array);
@@ -26,9 +27,11 @@
 			});
 			string1+="</table>"
 			console.log(string1);
-			$("#projectList").append(string1);
+			//$("#projectList").(string1);
+			document.getElementById("projectList").innerHTML = string1;
 		});
-	});
+	}
+	$(window).load(buildtable);
 function deleteD(t)
 {
 	var res = confirm("Are you sure?");
@@ -37,6 +40,7 @@ function deleteD(t)
 	$.getJSON($SCRIPT_ROOT+"/del",{
 		idd : t
 	},function(data){
+		location.reload();
 		return true;
 	});
 }
