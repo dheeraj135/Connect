@@ -204,6 +204,7 @@ def addTag():
 	return "Done";
 
 @app.route('/get_ini')
+@is_logged_in
 def getdata():
 	username = session['username']
 	app.logger.info(username);
@@ -214,6 +215,20 @@ def getdata():
 		return TagList["tagArray"];
 	return "[]";
 
+@app.route('/proj')
+@is_logged_in
+def getProj():
+	username = session['username']
+	app.logger.info
+	cur = mysql.connection.cursor();
+	result = cur.execute("select id,project_title,description,tagArray from projects where username=%s",[username]);
+	if(result):
+		return json.dumps(cur.fetchall());
+	return "[]";
+@app.route('/projects')
+@is_logged_in
+def Projects():
+	return render_template('projects.html')
 
 @app.route('/dashboard')
 @is_logged_in
