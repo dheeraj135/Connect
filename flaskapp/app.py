@@ -23,22 +23,25 @@ mysql=MySQL(app)
 def index():
     return render_template('home.html')
 
-# @app.route("/about")
-# def about():
-#     return render_template('about.html')
-#
-# @app.route("/articles")
-# def artic():
-#     return render_template('articles.html',data=_articles)
+"""
+@app.route("/about")
+def about():
+    return render_template('about.html')
 
-# @app.route("/article/<string:id>/")
-# def art(id):
-#     return render_template('article.html',id=id)
+@app.route("/articles")
+def artic():
+    return render_template('articles.html',data=_articles)
+
+@app.route("/article/<string:id>/")
+def art(id):
+    return render_template('article.html',id=id)
+"""
 
 class RegisterForm(Form):
     name= StringField('Name',[validators.Length(min=1,max=50),validators.DataRequired()])
     roll= StringField('Roll-Number',[validators.Length(6)])
     username=StringField('Username',[validators.Length(min=4,max=25),validators.DataRequired()])
+    radiof=RadioField('Label',choices=[('Student','description1'),('Faculty','description2')])
     email=StringField('Email',[validators.Length(min=6,max=50),validators.DataRequired()])
     password= PasswordField('Password',[
        validators.DataRequired(),
@@ -54,6 +57,8 @@ def register():
         roll=form.roll.data
         email=form.email.data
         username=form.username.data
+        whatperson=form.radiof.data
+        app.logger.info(whatperson)
         password=sha256_crypt.encrypt(str(form.password.data))
 
         #cursor
