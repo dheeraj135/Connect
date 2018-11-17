@@ -6,10 +6,10 @@
  {% from "include/_formhelpers.html" import render_field %}
  <form method="POST" action="" id="form1" name ="form1">
    <div class="form-group">
-     <input type="text" id="title" name="title" class="form-control">
+     <input type="text" id="title" name="title" class="form-control" >
    </div>
    <div class="form-group">
-     <textarea type="textbox" id="desc" name="desc" class="form-control"></textarea>
+     <textarea type="text" id="desc" name="desc" class="form-control"></textarea>
    </div>
    <label for="tag">Add Tags: </label>
  	 <input type="text" id="tag" name="tag" data-role="tagsinput" class="form-control">
@@ -28,6 +28,7 @@
 	});
  	$SCRIPT_ROOT = {{request.script_root|tojson|safe}};
 	$(window).load(function(){
+		CKEDITOR.replace('desc');
 		console.log("Hello");
 		console.log($_GET["id"]);
 		$('#idd').val($_GET["id"]);
@@ -55,5 +56,6 @@
 	$('#tag').on('beforeItemRemove',function(event){
 		event.cancel = !(confirm("Delete "+event.item+" ?"));
 	});
+
  </script>
  {% endblock %}

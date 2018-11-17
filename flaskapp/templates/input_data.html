@@ -8,11 +8,16 @@
 <form name="add" id="add">
 	<label for="tag">Add tag: </label>
 	<input type="text" id="tag1" name="tag" data-role="tagsinput" >
+	<textarea type="text" id="insdescription1" name="insdescription1" class=" form-control" rows="5" placeholder="Description"></textarea>
+
+</div> 
 </form>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript">
 	$SCRIPT_ROOT = {{request.script_root|tojson|safe}};
 	$(window).load(function(){
+		//CKEDITOR.config.startupMode = 'source';
+    	CKEDITOR.replace('insdescription1');
 		console.log("Hello");
 		$.getJSON($SCRIPT_ROOT+'/get_ini',{},function(data){
 			var array = data;
@@ -39,5 +44,5 @@
 			});
 		});
 </script>
-
+<script src="https://cdn.ckeditor.com/4.7.1/standard/ckeditor.js"></script>
 {% endblock %}

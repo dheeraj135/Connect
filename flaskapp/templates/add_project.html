@@ -12,7 +12,7 @@
    </div>
    <div class="form-group">
      <label for="desc">Description: </label>
-     <input type="textbox" id="desc" name="desc" class="form-control">
+     <textarea type="text" id="desc" name="desc" class="form-control"></textarea>
      <!-- <textbox id="desc" name="desc" class="form-control"></textbox> -->
    </div>
    <label for="tag">Add Tags: </label>
@@ -24,5 +24,6 @@
  	$('#tag').on('beforeItemRemove',function(event){
 		event.cancel = !(confirm("Delete "+event.item+" ?"));
 	});
+  CKEDITOR.replace('desc');
  </script>
 {% endblock %}
