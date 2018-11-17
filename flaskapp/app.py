@@ -252,10 +252,10 @@ def add_project():
 
 
 
-# @app.route('/input.html')
-# @is_logged_in
-# def input():
-# 	return render_template('input_data.html')
+@app.route('/input.html')
+@is_logged_in
+def input():
+	return render_template('input_data.html')
 
 if __name__=='__main__':
     app.secret_key='123456'
