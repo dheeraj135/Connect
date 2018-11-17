@@ -17,23 +17,9 @@ app.config['MYSQL_CURSORCLASS']='DictCursor'
 #init MYSQL
 mysql=MySQL(app)
 
-# _articles=Articles();
-
 @app.route('/')
 def index():
     return render_template('home.html')
-
-# @app.route("/about")
-# def about():
-#     return render_template('about.html')
-#
-# @app.route("/articles")
-# def artic():
-#     return render_template('articles.html',data=_articles)
-
-# @app.route("/article/<string:id>/")
-# def art(id):
-#     return render_template('article.html',id=id)
 
 class RegisterForm(Form):
     name= StringField('Name',[validators.Length(min=1,max=50),validators.DataRequired()])
@@ -175,44 +161,44 @@ def logout():
 # 			mysql.connection.commit();
 # 			app.logger.info(res);
 
-@app.route('/add_tag')
-def addTag():
-	valueT = request.args.get('valueT')
-	app.logger.info(valueT);
-	if len(valueT) :
-		username = session['username']
-		app.logger.info(username);
-		cur = mysql.connection.cursor();
-		# # result = cur.execute("select tagArray from users where username=%s",[username]);
-		# # app.logger.info(result);
-		# # app.logger.info("Step1");
-		# # TagList = cur.fetchone();
-		# # TagList = TagList["tagArray"];
-		# # app.logger.info(type(TagList))
-		# # app.logger.info(TagList);
-		# # app.logger.info("Step2");
-		# # app.logger.info("IN NOT NONE");
-		# TagList = json.loads(valueT);
-		# app.logger.info("step3");
-		# # TagList.append(valueT)
-		# app.logger.info(TagList);
-		# app.logger.info("YO");
-		# TagList = json.dumps(TagList)
-		# #TagList = base64.b64encode(TagList);
-		cur.execute("update users SET tagArray = %s where username=%s",(valueT,username));
-		mysql.connection.commit();
-	return "Done";
-
-@app.route('/get_ini')
-def getdata():
-	username = session['username']
-	app.logger.info(username);
-	cur = mysql.connection.cursor();
-	result = cur.execute("select tagArray from users where username=%s",[username]);
-	if(result):
-		TagList = cur.fetchone();
-		return TagList["tagArray"];
-	return "[]";
+# @app.route('/add_tag')
+# def addTag():
+# 	valueT = request.args.get('valueT')
+# 	app.logger.info(valueT);
+# 	if len(valueT) :
+# 		username = session['username']
+# 		app.logger.info(username);
+# 		cur = mysql.connection.cursor();
+# 		# # result = cur.execute("select tagArray from users where username=%s",[username]);
+# 		# # app.logger.info(result);
+# 		# # app.logger.info("Step1");
+# 		# # TagList = cur.fetchone();
+# 		# # TagList = TagList["tagArray"];
+# 		# # app.logger.info(type(TagList))
+# 		# # app.logger.info(TagList);
+# 		# # app.logger.info("Step2");
+# 		# # app.logger.info("IN NOT NONE");
+# 		# TagList = json.loads(valueT);
+# 		# app.logger.info("step3");
+# 		# # TagList.append(valueT)
+# 		# app.logger.info(TagList);
+# 		# app.logger.info("YO");
+# 		# TagList = json.dumps(TagList)
+# 		# #TagList = base64.b64encode(TagList);
+# 		cur.execute("update users SET tagArray = %s where username=%s",(valueT,username));
+# 		mysql.connection.commit();
+# 	return "Done";
+#
+# @app.route('/get_ini')
+# def getdata():
+# 	username = session['username']
+# 	app.logger.info(username);
+# 	cur = mysql.connection.cursor();
+# 	result = cur.execute("select tagArray from users where username=%s",[username]);
+# 	if(result):
+# 		TagList = cur.fetchone();
+# 		return TagList["tagArray"];
+# 	return "[]";
 
 
 @app.route('/dashboard')
@@ -222,27 +208,25 @@ def dashboard():
 
 
 
-class ProjectForm(Form):
-    title= StringField('Title',[validators.Length(min=1,max=100)])
-    description= TextAreaField('Description')
-
 # class ProjectForm(Form):
 #     title= StringField('Title',[validators.Length(min=1,max=100)])
 #     description= TextAreaField('Description')
-#     tagArray=
+#     tagArray= StringField('Tags')
 
 
 
 @app.route('/add_project',methods=['GET','POST'])
 @is_logged_in
 def add_project():
-    form = ProjectForm(request.form)
-    if request.method=='POST' and form.validate():
-        title=form.title.data
-        description=form.description.data
-
+    # form = ProjectForm(request.form)
+    if request.method=='POST' :
+        #title=form.title.data
+        #description=form.description.data
+        title = request.form["title"];
+        description = request.form["desc"];
+        tagArray = request.form["tag"];
         cur=mysql.connection.cursor()
-        cur.execute("Insert into projects(username,project_title,description) values(%s, %s, %s)",(session['username'],title,description))
+        cur.execute("Insert into projects(username,project_title,description,tagArray) values(%s, %s, %s, %s)",(session['username'],title,description,tagArray))
         mysql.connection.commit()
         cur.close()
 
