@@ -10,8 +10,8 @@ app = Flask(__name__)
 
 #Config flask_mysql
 app.config['MYSQL_HOST']='localhost'
-app.config['MYSQL_USER']='php'
-app.config['MYSQL_PASSWORD']='localhost'
+app.config['MYSQL_USER']='root'
+app.config['MYSQL_PASSWORD']='prajjwal'
 app.config['MYSQL_DB']='myflaskapp'
 app.config['MYSQL_CURSORCLASS']='DictCursor'
 #init MYSQL
@@ -58,7 +58,7 @@ def register():
 
         #cursor
         cur= mysql.connection.cursor()
-        cur.execute("INSERT INTO users(name,email,username,password) values(%s,%s,%s,%s)",(name,email,username,password))
+        cur.execute("INSERT INTO users(name,roll,email,username,password) values(%s,%s,%s,%s,%s)",(name,roll,email,username,password))
 
         #commit to DB
         mysql.connection.commit()
@@ -91,6 +91,7 @@ def login():
                  session['logged_in']=True
                  session['username']=username
                  session['name']=data['name']
+                 session['roll']=data['roll']
                  flash("You are now logged in",'success')
                  return redirect(url_for('dashboard'))
 
@@ -173,6 +174,7 @@ def logout():
 # 			res = cur.execute(a);
 # 			mysql.connection.commit();
 # 			app.logger.info(res);
+
 @app.route('/add_tag')
 def addTag():
 	valueT = request.args.get('valueT')
@@ -212,11 +214,17 @@ def getdata():
 		return TagList["tagArray"];
 	return "[]";
 
+
 @app.route('/dashboard')
 @is_logged_in
 def dashboard():
     return render_template('dashboard.html')
 
+
+
+class ProjectForm(Form):
+    title= StringField('Title',[validators.Length(min=1,max=100)])
+    description= TextAreaField('Description')
 
 # class ProjectForm(Form):
 #     title= StringField('Title',[validators.Length(min=1,max=100)])
@@ -224,10 +232,30 @@ def dashboard():
 #     tagArray=
 
 
-@app.route('/input.html')
+
+@app.route('/add_project',methods=['GET','POST'])
 @is_logged_in
-def input():
-	return render_template('input_data.html')
+def add_project():
+    form = ProjectForm(request.form)
+    if request.method=='POST' and form.validate():
+        title=form.title.data
+        description=form.description.data
+
+        cur=mysql.connection.cursor()
+        cur.execute("Insert into projects(username,project_title,description) values(%s, %s, %s)",(session['username'],title,description))
+        mysql.connection.commit()
+        cur.close()
+
+        flash('project added','success')
+        return redirect(url_for('dashboard'))
+    return render_template('add_project.html',data=form)
+
+
+
+# @app.route('/input.html')
+# @is_logged_in
+# def input():
+# 	return render_template('input_data.html')
 
 if __name__=='__main__':
     app.secret_key='123456'
